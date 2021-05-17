@@ -1,20 +1,28 @@
+'use strict';
+const system = require('system');
+const isCorrectNumOfArgs = system.args.length === 3;
+if(!isCorrectNumOfArgs) {
+	console.log('Usage: phantomjs test_calculator.js https://example.com');
+}
+
 const page = require('webpage').create();
-page.open('https://localhost', function(responseStatus) {
-	const responseWasSuccessful = responseStatus == "success";
+page.open(system.args[2], function(responseStatus) {
+	const responseWasSuccessful = responseStatus == 'success';
 	if(!responseWasSuccessful) {
-		console.error("Error: response status was " + responseStatus + "; Couldn't get website");
+		console.error('Error: response status was ' + responseStatus + '; Couldn\'t get: ' + page.url);
 		phantom.exit();
 		return;
 	}
 	// console.log(page.content);
 
 	const pageTitle = page.evaluate(getPageTitle);
-	console.log("the page title: ", pageTitle);
+	console.log('the page title: ', page.title);
 	phantom.exit();
 });
 
-function getPageTitle() {
-	return $("head title").html();
+function testForInputs() {
+	// test that the number input is there
+	return $('#num1').html();
 }
 
 // our simple shortener for querySelectorAll
