@@ -20,6 +20,7 @@ page.open(system.args[2], function(responseStatus) {
 	phantom.exit();
 });
 
+
 function testForInputs() {
 	// test that the number input is there
 	return $('#num1').html();
