@@ -1,6 +1,9 @@
 $(document).ready(function() {
 	// when we click calculate!!
-	$("#calculate").on("click", function(evt) {
+	$("#calculator_form").on("submit", function(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+
 		// Get num1
 		const num1Val = $("#num1").val();
 		// get num2

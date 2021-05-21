@@ -15,17 +15,19 @@
 	<script type="text/javascript" src="practice.js"></script>
   </head>
   <body>
-	  <input id="num1" type="number" />
-	  <select id="operation">
-		  <option>+</option>
-		  <option>-</option>
-		  <option>*</option>
-		  <option>/</option>
-	  </select>
-	  <input id="num2" type="number" />
-	  =
-	  <span id="results"></span>
-	  <br />
-	  <button id="calculate">Calculate</button>
+	  <form id="calculator_form">
+		  <input id="num1" name="num1" type="number" />
+		  <select id="operation" name="operation">
+			  <option>+</option>
+			  <option>-</option>
+			  <option>*</option>
+			  <option>/</option>
+		  </select>
+		  <input id="num2" name="num2" type="number" />
+		  =
+		  <span id="results"></span>
+		  <br />
+		  <button id="calculate">Calculate</button>
+	  </form>
   </body>
 </html>

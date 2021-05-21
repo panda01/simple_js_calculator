@@ -1,5 +1,32 @@
 'use strict';
-const system = require('system');
+var system = require('system');
+
+casper.test.begin('Calculator is laid out correctly', function(test) {
+	casper.start('http://localhost', function() {
+		test.assertTitle("Calculator");
+	})
+		.then(function() {
+			test.assertExists("#num1");
+			test.assertExists("#num2");
+			test.assertExists("#operation");
+			test.assertExists("#calculate");
+			test.assertAllVisible("#num1, #num2, #operation, #calculate");
+		})
+		.then(function() {
+			test.assertEquals(this.getElementAttribute("#num1", "type"), "number");
+		})
+	.run(function() {
+		test.done();
+	});
+});
+
+/*
+return;
+
+function testIfCorrectNumOfInputs() {
+	document.querySelectorAll(
+}
+
 const isCorrectNumOfArgs = system.args.length === 3;
 if(!isCorrectNumOfArgs) {
 	console.log('Usage: phantomjs test_calculator.js https://example.com');
@@ -25,6 +52,7 @@ function testForInputs() {
 	// test that the number input is there
 	return $('#num1').html();
 }
+
 
 // our simple shortener for querySelectorAll
 function $(selector) {
@@ -58,3 +86,4 @@ class fakeQuery {
 		return oldVal;
 	}
 }
+*/
