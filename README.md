@@ -2,9 +2,6 @@
 
 This project is built to showcase the ability to properly test pages built with some plain old html javascript and css
 
-require [phantomjs](https://phantomjs.org/)
-
-
 # Setup
 
 This project contains 2 parts, the website that contains the Actual calculator and the files necessary for rendering of it, and also the automatic tests mainly in the file `test_calculator.js`
