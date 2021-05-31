@@ -1,89 +1,99 @@
-'use strict';
-var system = require('system');
+/*
+casper.options.verbose = true;
+casper.options.logLevel ="debug";
+*/
+
+casper.test.begin('Calculator Works correctly', function(test) {
+	casper.on("resource.error", function(resource) {
+		this.echo("Resource errored: " + resource.url);
+	});
+	casper.on("resource.received", function(resource) {
+		this.echo("Resource received: " + resource.url);
+	});
+	casper.on("remote.message", function(msg) {
+		this.echo("++ Console Log: " + msg);
+	});
+	casper.on("page.error", function(msg) {
+		this.echo("-- Console Error: " + msg);
+	});
+	casper
+		.start('http://localhost')
+		.waitForSelector("#calculator_form, #num1, #num2, #operation, #calculate",
+			function success() {
+				C("Setting 5 for inputs, and '+' as the operation");
+				var worked = this.evaluate(function() {
+					$("#num1").val(5);
+					$("#num2").val(5);
+					$("#operation").val("+");
+					return true;
+				});
+			},
+			function fail() {
+			}, 1000)
+		.wait(1000, function() {
+			C("submiting the form");
+			var submit = this.evaluate(function() {
+				return window.calculator_calculate();
+				// return $("#calculator_form").trigger("submit");
+			});
+		})
+		.wait(1000, function() {
+			var num1Val = this.evaluate(function() {
+				return $("#results").html();
+			});
+			dump(num1Val);
+		})
+		.waitForSelector("#results", function() {
+			test.assertEquals(this.evaluate(function() {
+				return $("#results").html();
+			}), "10");
+		})
+		.run(function() {
+			test.done();
+		});
+});
 
 casper.test.begin('Calculator is laid out correctly', function(test) {
-	casper.start('http://localhost', function() {
-		test.assertTitle("Calculator");
-	})
+	casper
+		.start('http://localhost', function() {
+			test.assertTitle("Calculator");
+		})
 		.then(function() {
+			C("Test everthing exists");
 			test.assertExists("#num1");
 			test.assertExists("#num2");
 			test.assertExists("#operation");
 			test.assertExists("#calculate");
-			test.assertAllVisible("#num1, #num2, #operation, #calculate");
+			test.assertExists("#results");
+			test.assertExists("#calculator_form");
+			test.assertAllVisible("#num1, #num2, #operation, #calculate, #calculator_form");
 		})
 		.then(function() {
-			test.assertEquals(this.getElementAttribute("#num1", "type"), "number");
+			C("Testing #num1 input");
+			var num1Info = this.getElementInfo("#num1");
+			test.assertEquals(num1Info.nodeName, "input");
+			test.assertEquals(num1Info.attributes.type, "number");
+			test.assertEquals(num1Info.attributes.name, "num1");
+
+			C("Testing #num2 input");
+			var num2Info = this.getElementInfo("#num2");
+			test.assertEquals(num2Info.nodeName, "input");
+			test.assertEquals(num2Info.attributes.type, "number");
+			test.assertEquals(num2Info.attributes.name, "num2");
+
+			C("Testing #operation select");
+			var operationSelInfo = this.getElementInfo("#operation");
+			test.assertEquals(operationSelInfo.nodeName, "select");
 		})
-	.run(function() {
-		test.done();
-	});
+		.run(function() {
+			test.done();
+		});
 });
 
-/*
-return;
-
-function testIfCorrectNumOfInputs() {
-	document.querySelectorAll(
+function C(msg) {
+	casper.echo(msg, "COMMENT");
+}
+function dump(obj) {
+	require("utils").dump(obj);
 }
 
-const isCorrectNumOfArgs = system.args.length === 3;
-if(!isCorrectNumOfArgs) {
-	console.log('Usage: phantomjs test_calculator.js https://example.com');
-}
-
-const page = require('webpage').create();
-page.open(system.args[2], function(responseStatus) {
-	const responseWasSuccessful = responseStatus == 'success';
-	if(!responseWasSuccessful) {
-		console.error('Error: response status was ' + responseStatus + '; Couldn\'t get: ' + page.url);
-		phantom.exit();
-		return;
-	}
-	// console.log(page.content);
-
-	const pageTitle = page.evaluate(getPageTitle);
-	console.log('the page title: ', page.title);
-	phantom.exit();
-});
-
-
-function testForInputs() {
-	// test that the number input is there
-	return $('#num1').html();
-}
-
-
-// our simple shortener for querySelectorAll
-function $(selector) {
-	const selectedNodeList = window.document.querySelectorAll(selector);
-	const isEmptyList = selectedNodeList.length === 0;
-	if(isEmptyList) {
-		return undefined;
-	}
-	return new fakeQuery(selectedNodeList);
-}
-class fakeQuery {
-	#nodeList
-	constructor(nodes) {
-		this.#nodeList = nodes;
-	}
-
-	isEmpty() {
-		return (this.#nodeList.length === 0);
-	}
-	html() {
-		return this.#nodeList[0].innerHTML;
-	}
-	val(newValue) {
-		const oldVal = this.#nodeList[0].value;
-		if(newValue !== undefined && newValue !== null) {
-			this.#nodeList.forEach(function(node) {
-				node.value = newValue;
-			});
-		}
-
-		return oldVal;
-	}
-}
-*/

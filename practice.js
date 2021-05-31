@@ -1,16 +1,18 @@
+console.log("hello world 2!!");
 $(document).ready(function() {
+	console.log("hello world");
 	// when we click calculate!!
 	$("#calculator_form").on("submit", function(evt) {
 		evt.stopPropagation();
 		evt.preventDefault();
 
 		// Get num1
-		const num1Val = $("#num1").val();
+		var num1Val = $("#num1").val();
 		// get num2
-		const num2Val = $("#num2").val();
+		var num2Val = $("#num2").val();
 		// based on operator
-		const operator = $("#operation").val();
-		let resultssss;
+		var operator = $("#operation").val();
+		var resultssss;
 		if(operator === "+")
 		{
 			resultssss = parseInt(num1Val, 10) + parseInt(num2Val, 10);
@@ -19,4 +21,7 @@ $(document).ready(function() {
 
 		$("#results").html(resultssss);
 	});
+	window.calculator_calculate = function() {
+		$("#calculator_form").trigger("submit");
+	};
 });
